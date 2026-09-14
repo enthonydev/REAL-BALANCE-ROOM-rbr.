@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useLocation } from "wouter";
 import { createUserWithEmailAndPassword, sendPasswordResetEmail, sendEmailVerification, signInWithEmailAndPassword } from "firebase/auth";
 import { ArrowRight, Check, Mail, ShieldCheck } from "lucide-react";
@@ -14,10 +14,10 @@ export default function Auth() {
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  if (user?.emailVerified) {
-    navigate("/");
-    return null;
-  }
+  useEffect(() => {
+    if (user?.emailVerified) navigate("/");
+  }, [navigate, user]);
+  if (user?.emailVerified) return null;
 
   const submit = async (event: React.FormEvent) => {
     event.preventDefault();

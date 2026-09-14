@@ -6,13 +6,28 @@ import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
 import Auth from "./pages/Auth";
-import { AuthProvider } from "./contexts/AuthContext";
+import { AuthProvider, useAuth } from "./contexts/AuthContext";
+import { useEffect } from "react";
+import { useLocation } from "wouter";
 
+function ProtectedHome() {
+  const { user, loading, configured } = useAuth();
+  const [, navigate] = useLocation();
+
+  useEffect(() => {
+    if (configured && !loading && (!user || !user.emailVerified)) navigate("/auth");
+  }, [configured, loading, navigate, user]);
+
+  if (configured && (loading || !user?.emailVerified)) {
+    return <main className="auth-page"><p className="auth-intro">Verificando seu acesso...</p></main>;
+  }
+  return <Home />;
+}
 
 function Router() {
   return (
     <Switch>
-      <Route path={"/"} component={Home} />
+      <Route path={"/"} component={ProtectedHome} />
       <Route path={"/auth"} component={Auth} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}

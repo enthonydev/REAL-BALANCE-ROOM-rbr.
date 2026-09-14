@@ -20,14 +20,14 @@ function isGoal(value: unknown): value is AmortizationGoal {
 
 function readFinancingInput(body: Record<string, unknown>): FinancingInput {
   const input = { principal: Number(body.principal), annualRate: Number(body.annualRate), termMonths: Number(body.termMonths), method: body.method };
-  if (!Number.isFinite(input.principal) || input.principal <= 0 || !Number.isFinite(input.annualRate) || input.annualRate < 0 || !Number.isInteger(input.termMonths) || input.termMonths <= 0 || !isMethod(input.method)) throw new Error("Dados do financiamento inválidos.");
+  if (!Number.isFinite(input.principal) || input.principal <= 0 || input.principal > 1_000_000_000 || !Number.isFinite(input.annualRate) || input.annualRate < 0 || input.annualRate > 100 || !Number.isInteger(input.termMonths) || input.termMonths <= 0 || input.termMonths > 600 || !isMethod(input.method)) throw new Error("Dados do financiamento inválidos.");
   return input as FinancingInput;
 }
 
 function readAmortization(body: Record<string, unknown>) {
   const payment = { month: Number(body.month), amount: Number(body.amount) };
   const goal = body.goal ?? "term";
-  if (!Number.isInteger(payment.month) || payment.month <= 0 || !Number.isFinite(payment.amount) || payment.amount <= 0 || !isGoal(goal)) throw new Error("Dados da amortização inválidos.");
+  if (!Number.isInteger(payment.month) || payment.month <= 0 || payment.month > 600 || !Number.isFinite(payment.amount) || payment.amount <= 0 || payment.amount > 1_000_000_000 || !isGoal(goal)) throw new Error("Dados da amortização inválidos.");
   return { payment, goal } as { payment: ExtraordinaryPayment; goal: AmortizationGoal };
 }
 
@@ -41,7 +41,15 @@ async function startServer() {
   const server = createServer(app);
   const database = openDatabase();
   const localUser = ensureLocalUser(database);
-  app.use(express.json());
+  app.disable("x-powered-by");
+  app.use((_req, res, next) => {
+    res.setHeader("X-Content-Type-Options", "nosniff");
+    res.setHeader("Referrer-Policy", "no-referrer");
+    res.setHeader("X-Frame-Options", "DENY");
+    next();
+  });
+  app.use(express.json({ limit: "32kb" }));
+  app.get("/health", (_req, res) => res.json({ status: "ok" }));
   const authRequired = process.env.AUTH_REQUIRED === "true";
   const firebaseServiceAccount = process.env.FIREBASE_SERVICE_ACCOUNT_JSON;
   if (firebaseServiceAccount && getApps().length === 0) initializeApp({ credential: cert(JSON.parse(firebaseServiceAccount)) });
@@ -55,6 +63,7 @@ async function startServer() {
     try {
       if (!getApps().length) return res.status(503).json({ error: "Autenticação externa não configurada." });
       const token = await getAuth().verifyIdToken(authorization.slice(7));
+      if (!token.email_verified) return res.status(403).json({ error: "Verifique seu e-mail antes de acessar o RBR." });
       const user = ensureFirebaseUser(database, token.uid, token.email, token.name);
       res.locals.userId = user.id;
       return next();
