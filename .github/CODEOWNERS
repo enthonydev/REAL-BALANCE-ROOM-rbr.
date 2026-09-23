@@ -1,0 +1,7 @@
+# Revisão obrigatória para alterações de infraestrutura e segurança
+/.github/ @enthonydev
+/server/ @enthonydev
+/shared/ @enthonydev
+SECURITY.md @enthonydev
+package.json @enthonydev
+pnpm-lock.yaml @enthonydev
