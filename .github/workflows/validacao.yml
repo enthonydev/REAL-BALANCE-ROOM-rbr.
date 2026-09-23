@@ -2,28 +2,53 @@ name: Validacao
 
 on:
   push:
-    branches: [main]
+    branches: [main, develop]
   pull_request:
-    branches: [main]
+    branches: [main, develop]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: validacao-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   verificar:
+    name: Verificar projeto
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - name: Baixar codigo
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
       - name: Configurar pnpm
         uses: pnpm/action-setup@v4
+        with:
+          version: 10.34.5
+
       - name: Configurar Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: pnpm
+
       - name: Instalar dependencias
         run: pnpm install --frozen-lockfile
+
+      - name: Verificar arquivos alterados
+        run: git diff --check HEAD^ HEAD
+
       - name: Verificar tipos
-        run: pnpm check
+        run: pnpm run check
+
       - name: Executar testes
         run: pnpm test
+
+      - name: Auditar dependencias de producao
+        run: pnpm audit --prod
+
       - name: Gerar build
-        run: pnpm build
+        run: pnpm run build
