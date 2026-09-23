@@ -5,14 +5,27 @@ updates:
     schedule:
       interval: weekly
     open-pull-requests-limit: 5
+    versioning-strategy: increase
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
     groups:
       dependencias-de-producao:
         dependency-type: production
+        update-types:
+          - "minor"
+          - "patch"
       dependencias-de-desenvolvimento:
         dependency-type: development
+        update-types:
+          - "minor"
+          - "patch"
 
   - package-ecosystem: github-actions
     directory: "/"
     schedule:
       interval: monthly
     open-pull-requests-limit: 5
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
