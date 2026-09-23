@@ -4,6 +4,8 @@
 
 O RBR é uma aplicação local para planejar financiamentos imobiliários, simular os sistemas **Price** e **SAC**, aplicar amortizações extraordinárias e comparar os efeitos sobre prazo, parcela, juros e saldo devedor.
 
+A aplicação é AI supported, possibilitando maior escopo de desenvolvimento, garantindo mais qualidade e também auxiliando a  minha evolução técnica/prática de codificação, engenharia de software, produto, regras de negócio, produto e etc. (IA deve ser sempre utilizada com responsabilidade para manter a segurança e também a autenticidade e o aprendizado verdadeiro sem deixar de evoluir junto com o mercado e as novas tecnologias)
+
 A aplicação separa o motor financeiro determinístico da interface e da persistência. Isso permite revisar os cálculos com testes, manter os resultados reproduzíveis e evoluir a experiência sem duplicar regras de negócio.
 
 > **Estado atual:** o RBR é uma ferramenta local de simulação e análise. Integrações bancárias, Open Finance, importação documental e auditoria de eventos reais ainda fazem parte do roadmap e não estão implementadas.
