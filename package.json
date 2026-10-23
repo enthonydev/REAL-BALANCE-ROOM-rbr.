@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "description": "Planejamento e simulação de financiamentos imobiliários com Price, SAC e amortizações extraordinárias.",
   "author": "enthonydev <enthony@eaportal.org>",
-  "repository": "github:enthonydev/-RBR",
-  "bugs": "https://github.com/enthonydev/-RBR/issues",
-  "homepage": "https://github.com/enthonydev/-RBR",
+  "repository": "github:enthonydev/REAL-BALANCE-ROOM-rbr.",
+  "bugs": "https://github.com/enthonydev/REAL-BALANCE-ROOM-rbr./issues",
+  "homepage": "https://github.com/enthonydev/REAL-BALANCE-ROOM-rbr.",
   "type": "module",
   "license": "MIT",
   "engines": {
