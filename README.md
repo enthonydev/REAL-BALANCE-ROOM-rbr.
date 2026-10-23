@@ -64,7 +64,7 @@ O motor financeiro está em `shared/finance.ts`. A interface principal está em 
 
 ```bash
 git clone https://github.com/enthonydev/REAL-BALANCE-ROOM-rbr..git
-cd -RBR
+cd REAL-BALANCE-ROOM-rbr.
 pnpm install
 ```
 
@@ -193,4 +193,4 @@ Este projeto é distribuído sob a licença MIT. Consulte o arquivo [LICENSE](LI
 
 - [Documentação da arquitetura](docs/arquitetura.md)
 - [Relatório de status](relatorio-status-rbr.md)
-- [Repositório no GitHub](https://github.com/enthonydev/-RBR)
+- [Repositório no GitHub](https://github.com/enthonydev/REAL-BALANCE-ROOM-rbr.)
